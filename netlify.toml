@@ -1,0 +1,6 @@
+# This file tells Netlify where your "middle-man" functions are.
+# Place this in your main `ruralmarket-project` folder.
+
+[build]
+  # This is the directory where your serverless functions are.
+  functions = "netlify/functions"

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品列表生成器 - RuralMarket.AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    /* Paste your EXACT CSS from generate.html here. 
+       For brevity, I assume you copy the CSS from your English file. 
+       It is identical. */
+    body { margin: 0; font-family: "Poppins", sans-serif; background: #f7f9fc; }
+    .navbar { width: 100%; background: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: fixed; top: 0; left: 0; z-index: 10; box-sizing: border-box; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600; color: #1a73e8; text-decoration: none; }
+    .logo-icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background-color: #1a73e8; color: white; font-size: 22px; font-weight: 600; border-radius: 8px; }
+    .nav-links a { margin-left: 30px; text-decoration: none; color: #2d2d2d; font-size: 16px; font-weight: 500; }
+    .nav-links a:hover, .nav-links .active { color: #1a73e8; }
+    .lang-switch { border: 1px solid #1a73e8; padding: 5px 10px; border-radius: 20px; font-size: 14px; margin-left: 20px; }
+    
+    /* ... Copy the rest of the CSS from generate.html ... */
+    /* INCLUDE ALL CSS FOR FORM, SPINNER, RESULTS, ETC. */
+    .page-title { margin-top: 130px; text-align: center; font-size: 40px; font-weight: 600; color: #333; }
+    .section-subtitle { font-size: 22px; text-align: center; margin-top: 25px; font-weight: 500; }
+    .underline { width: 120px; height: 3px; background: #1a73e8; margin: 8px auto 25px; border-radius: 5px; }
+    .form-container { width: 90%; max-width: 900px; margin: auto; background: white; padding: 35px; border-radius: 18px; box-shadow: 0px 4px 12px rgba(0,0,0,0.1); margin-bottom: 35px; position: relative; box-sizing: border-box; }
+    .upload-box { width: 100%; border: 2px dashed #bcd3f8; border-radius: 14px; padding: 60px 30px; text-align: center; cursor: pointer; color: #1a73e8; background: #fafcff; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; }
+    .upload-box:hover { background: #f1f6ff; }
+    .upload-plus-icon { width: 50px; height: 50px; background-color: #6c757d; color: white; border-radius: 50%; font-size: 30px; font-weight: 300; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .upload-drag-text { color: #1a73e8; font-size: 16px; font-weight: 500; margin: 0; }
+    .upload-browse-text { color: #1a73e8; font-size: 14px; font-weight: 400; text-decoration: underline; margin-top: 4px; }
+    .image-preview-wrapper { position: relative; width: 100%; max-width: 300px; margin: 20px auto 0; display: none; }
+    #imagePreview { width: 100%; border-radius: 12px; display: block; }
+    .delete-image-btn { position: absolute; top: -10px; right: -10px; background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    .input-label { font-size: 18px; font-weight: 600; margin-top: 20px; display: block; color: #444; }
+    input, textarea { width: 100%; padding: 15px; margin-top: 8px; border-radius: 12px; border: 1px solid #ccc; background: #f9f9f9; font-size: 16px; box-sizing: border-box; }
+    textarea { height: 120px; resize: vertical; }
+    .hint { font-size: 13px; color: #666; margin-top: 6px; }
+    .generate-btn { display: block; margin: 35px auto; padding: 16px 50px; font-size: 18px; color: white; background: #1a73e8; border: none; border-radius: 30px; cursor: pointer; transition: 0.3s; }
+    .generate-btn:disabled { background: #aaa; cursor: not-allowed; }
+    .loading-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.9); display: none; align-items: center; justify-content: center; border-radius: 18px; flex-direction: column; z-index: 5; }
+    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #1a73e8; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .generated-listing-section { width: 90%; max-width: 900px; margin: 35px auto; background: white; padding: 35px; border-radius: 18px; box-shadow: 0px 4px 12px rgba(0,0,0,0.1); display: none; box-sizing: border-box; }
+    .listing-content-wrapper { display: flex; gap: 30px; margin-bottom: 30px; }
+    .listing-image-container { flex-shrink: 0; width: 250px; padding: 10px; background: #fdfdfd; border-radius: 18px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
+    .listing-image-container img { width: 100%; border-radius: 12px; }
+    .image-contrast-boosted { filter: contrast(120%) brightness(105%) saturate(110%); }
+    .image-comparison-controls { text-align: center; margin-top: 15px; }
+    .comparison-btn { padding: 8px 15px; margin: 0 5px; border: none; border-radius: 20px; font-size: 14px; cursor: pointer; transition: 0.3s; background: #f0f0f0; color: #444; }
+    .comparison-btn.active { background: #1a73e8; color: white; font-weight: 600; }
+    .listing-text-output { flex-grow: 1; }
+    .listing-text-output .label { font-size: 13px; font-weight: 500; color: #888; margin-top: 15px; display: block; }
+    .listing-text-output .title-text { font-size: 28px; font-weight: 600; color: #444; margin: 5px 0 10px; }
+    .listing-text-output .description-text { font-size: 16px; color: #555; line-height: 1.6; margin-bottom: 5px; }
+    .listing-text-output ul { list-style: none; padding: 0; margin-top: 10px; margin-bottom: 20px; }
+    .listing-text-output ul li { margin-bottom: 8px; font-size: 15px; color: #444; }
+    .listing-text-output ul li::before { content: "•"; margin-right: 8px; color: #1a73e8; font-weight: 800; }
+    .listing-text-output ul.check-list li::before { content: "✔️"; color: #28a745; }
+    .info-section p { font-size: 15px; color: #555; line-height: 1.5; }
+    .info-section h5 { font-size: 16px; font-weight: 600; color: #333; margin-top: 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .price-box { margin-top: 30px; }
+    .price-box .label { font-size: 14px; font-weight: 500; color: #888; margin-bottom: 5px; display: block; }
+    .price-box .suggested-price { font-size: 40px; font-weight: 700; color: #1a73e8; }
+    .hashtags { font-size: 14px; color: #1a73e8; background: #f1f6ff; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-top: 8px; margin-right: 5px; }
+    .action-buttons { text-align: center; margin-top: 30px; margin-bottom: 20px; }
+    .action-buttons button { padding: 12px 30px; margin: 0 10px; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+    .copy-btn { background: #1a73e8; color: white; }
+    .copy-btn img, .download-btn img { filter: invert(100%); }
+    .copy-btn:hover { background: #0d5dd7; }
+    .download-btn { background: white; color: #1a73e8; border: 1px solid #1a73e8; }
+    .download-btn:hover { background: #f1f6ff; }
+    .download-btn img { filter: invert(0%); }
+    .generate-again-btn { display: block; margin: 20px auto 35px; padding: 10px 25px; font-size: 16px; background: #f0f0f0; color: #444; border: 1px solid #ccc; border-radius: 20px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 5px; width: fit-content; }
+    .generate-again-btn:hover { background: #e0e0e8; }
+    .next-steps-box { background: #fffbef; border: 1px solid #fae6b9; padding: 25px; border-radius: 12px; margin-top: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .next-steps-box h4 { font-size: 18px; color: #333; margin-top: 0; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .next-steps-box ul { list-style: none; padding: 0; }
+    .next-steps-box ul li { margin-bottom: 10px; font-size: 15px; color: #555; }
+    .next-steps-box ul li::before { content: "✔"; margin-right: 8px; color: #1a73e8; font-weight: bold; }
+    .generated-listing-footer { text-align: center; font-size: 13px; color: #888; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; padding-bottom: 20px; }
+    @media (max-width: 768px) { .listing-content-wrapper { flex-direction: column; gap: 20px; } .listing-image-container { width: 100%; max-width: 300px; margin: auto; } .price-box .suggested-price { font-size: 32px; } .navbar { padding: 15px 20px; } .nav-links { overflow: hidden; } .nav-links a { margin-left: 10px; font-size: 14px; } .logo { font-size: 18px; } }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="index-cn.html" class="logo">
+        <span class="logo-icon">+</span>
+        RuralMarket.AI
+    </a>
+
+    <div class="nav-links">
+        <a href="index-cn.html">首页</a>
+        <a href="about-cn.html">关于我们</a>
+        <a class="active" href="generate-cn.html">生成列表</a>
+        <a href="contact-cn.html">联系我们</a>
+        <a href="generate.html" class="lang-switch">English</a>
+    </div>
+</div>
+
+<div class="page-title">AI 产品列表生成器</div>
+
+<div class="section-subtitle">输入您的产品详情</div>
+<div class="underline"></div>
+
+<div class="form-container">
+    <label class="input-label">上传产品照片 (可选)</label>
+    <div class="upload-box" id="uploadArea">
+        <div class="upload-plus-icon">+</div>
+        <p class="upload-drag-text">将照片拖放到此处</p>
+        <small class="upload-browse-text">或点击浏览</small>
+        <input type="file" id="imageInput" accept="image/*" style="display:none;">
+    </div>
+    <div class="image-preview-wrapper" id="imagePreviewWrapper">
+        <img id="imagePreview" src="" alt="产品预览图" />
+        <button class="delete-image-btn" id="deleteImageBtn">X</button>
+    </div>
+</div>
+
+<div class="form-container" style="position: relative;">
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p style="color: #444; font-weight: 500;">正在生成您的完美列表...</p>
+    </div>
+
+    <label class="input-label">📄 产品名称</label>
+    <input type="text" id="productName" placeholder="例如：新鲜有机番茄">
+
+    <label class="input-label">📄 产品描述 / 特点</label>
+    <textarea id="productDesc" placeholder="描述您的产品..."></textarea>
+    <div class="hint">添加简短的细节（例如：手工制作，有机，新品）。</div>
+
+    <button class="generate-btn" id="generateBtn">生成列表</button>
+</div>
+
+<div class="generated-listing-section" id="generatedListingSection">
+    <div class="action-buttons">
+        <button class="copy-btn" id="copyTextBtn">
+            <img src="https://www.svgrepo.com/show/511110/copy-01.svg" width="18" alt="Copy">
+            复制文本
+        </button>
+        <button class="download-btn" id="downloadResultBtn">
+            <img src="https://www.svgrepo.com/show/512952/download-1480.svg" width="18" alt="Download">
+            下载结果
+        </button>
+    </div>
+
+    <div class="listing-content-wrapper">
+        <div class="listing-image-container">
+            <img id="outputImage" src="" alt="生成的产品图片">
+            <div class="image-comparison-controls">
+                <button class="comparison-btn active" id="afterBtn">美化后</button>
+                <button class="comparison-btn" id="beforeBtn">原图</button>
+            </div>
+        </div>
+
+        <div class="listing-text-output">
+            <span class="label">产品标题</span>
+            <h2 class="title-text" id="outputTitle"></h2>
+
+            <span class="label">描述</span>
+            <p class="description-text" id="outputDescription"></p>
+            <p class="description-text" id="outputWeight"></p>
+
+            <div class="info-section">
+                <span class="label">产品亮点:</span>
+                <ul id="outputFeatures" class="check-list"></ul>
+            </div>
+
+            <div class="info-section">
+                <h5>🚚 配送信息:</h5>
+                <p>我们提供快速可靠的配送服务。每一份订单都经过精心处理，确保产品完好无损地送到您手中。</p>
+            </div>
+
+            <div class="info-section">
+                <h5>💚 为什么选择我们:</h5>
+                <p>我们致力于连接农村卖家与欣赏优质产品的客户。每一次购买都是对当地农民和工匠的支持。</p>
+            </div>
+
+            <div class="price-box">
+                <span class="label">建议价格</span>
+                <p class="suggested-price" id="outputPrice"></p>
+            </div>
+            
+            <span class="label" style="margin-top: 25px;">标签 (Hashtags)</span>
+            <div id="outputHashtags"></div>
+        </div>
+    </div>
+    
+    <button class="generate-again-btn" id="generateAgainBtn">
+        <img src="https://www.svgrepo.com/show/511239/refresh-1481.svg" width="16" alt="Refresh" style="filter: invert(50%);">
+        再次生成
+    </button>
+    
+    <div class="next-steps-box">
+        <h4>💡 下一步</h4>
+        <ul>
+            <li>复制列表文本并粘贴到您的销售平台</li>
+            <li>上传产品照片以完成发布</li>
+            <li>使用生成的标签在社交媒体上分享</li>
+            <li>根据市场和成本调整价格</li>
+        </ul>
+    </div>
+
+    <div class="generated-listing-footer">
+        © 2025 RuralMarket.AI – 用人工智能赋能农村创业者
+    </div>
+</div>
+
+<script>
+    // Copy all the JS from generate.html, but change the language param in callNetlifyFunction
+    const uploadArea = document.getElementById("uploadArea");
+    const imageInput = document.getElementById("imageInput");
+    const imagePreviewWrapper = document.getElementById("imagePreviewWrapper");
+    const imagePreview = document.getElementById("imagePreview");
+    const deleteImageBtn = document.getElementById("deleteImageBtn");
+    const generateBtn = document.getElementById("generateBtn");
+    const productNameInput = document.getElementById("productName");
+    const productDescInput = document.getElementById("productDesc");
+    const loadingOverlay = document.getElementById("loadingOverlay"); 
+    const generatedListingSection = document.getElementById("generatedListingSection");
+    const outputImage = document.getElementById("outputImage");
+    const outputTitle = document.getElementById("outputTitle");
+    const outputDescription = document.getElementById("outputDescription");
+    const outputWeight = document.getElementById("outputWeight");
+    const outputFeatures = document.getElementById("outputFeatures");
+    const outputPrice = document.getElementById("outputPrice");
+    const outputHashtags = document.getElementById("outputHashtags");
+    const copyTextBtn = document.getElementById("copyTextBtn");
+    const downloadResultBtn = document.getElementById("downloadResultBtn");
+    const generateAgainBtn = document.getElementById("generateAgainBtn");
+    const beforeBtn = document.getElementById("beforeBtn"); 
+    const afterBtn = document.getElementById("afterBtn"); 
+
+    let uploadedFile = null;
+
+    uploadArea.onclick = () => imageInput.click();
+    document.querySelector('.upload-drag-text').onclick = (e) => { e.stopPropagation(); imageInput.click(); };
+    document.querySelector('.upload-browse-text').onclick = (e) => { e.stopPropagation(); imageInput.click(); };
+
+    imageInput.onchange = () => {
+        const file = imageInput.files[0];
+        if (!file) { clearImagePreview(); return; }
+        if (file.size > 4 * 1024 * 1024) { alert("图片太大！请上传小于 4MB 的文件。"); clearImagePreview(); return; }
+        uploadedFile = file;
+        const reader = new FileReader();
+        reader.onload = () => { imagePreview.src = reader.result; imagePreviewWrapper.style.display = "block"; uploadArea.style.display = "none"; };
+        reader.readAsDataURL(file);
+    };
+
+    function clearImagePreview() { imagePreview.src = ""; imagePreviewWrapper.style.display = "none"; uploadArea.style.display = "flex"; imageInput.value = ''; uploadedFile = null; }
+    deleteImageBtn.onclick = (event) => { event.stopPropagation(); clearImagePreview(); };
+    function setActiveButton(activeBtn, inactiveBtn) { activeBtn.classList.add("active"); inactiveBtn.classList.remove("active"); }
+    afterBtn.onclick = () => { outputImage.classList.add("image-contrast-boosted"); setActiveButton(afterBtn, beforeBtn); };
+    beforeBtn.onclick = () => { outputImage.classList.remove("image-contrast-boosted"); setActiveButton(beforeBtn, afterBtn); };
+
+    generateBtn.onclick = async () => {
+        const productName = productNameInput.value.trim();
+        const productDescription = productDescInput.value.trim();
+        let base64Data = null;
+        let mimeType = null;
+        if (uploadedFile && imagePreview.src) {
+            if (imagePreview.src.startsWith('data:')) {
+                base64Data = imagePreview.src.split(',')[1];
+                mimeType = uploadedFile.type;
+            }
+        }
+        if (!productName && !productDescription && !base64Data) {
+            alert("请输入产品详情或上传照片以生成列表。");
+            return;
+        }
+        loadingOverlay.style.display = "flex";
+        generateBtn.disabled = true;
+        generateBtn.textContent = "正在生成...";
+        
+        try {
+            // PASS 'zh' for Chinese!
+            const generatedData = await callNetlifyFunction(productName, productDescription, base64Data, mimeType);
+            populateResults(generatedData);
+            loadingOverlay.style.display = "none";
+            generatedListingSection.style.display = "block";
+            window.scrollTo({ top: generatedListingSection.offsetTop - 100, behavior: 'smooth' });
+        } catch (error) {
+            console.error('Error:', error);
+            alert('生成列表时出错。请重试。\n\n' + error.message);
+            loadingOverlay.style.display = "none"; 
+        } finally {
+            generateBtn.disabled = false;
+            generateBtn.textContent = "生成列表";
+        }
+    };
+
+    async function callNetlifyFunction(productName, productDescription, base64Data, mimeType) {
+        const functionUrl = '/.netlify/functions/generate';
+        const payload = { 
+            productName, 
+            productDescription, 
+            base64Data, 
+            mimeType,
+            language: 'zh' // <--- CRITICAL CHANGE HERE
+        };
+
+        const response = await fetch(functionUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const responseBody = await response.text();
+        if (!response.ok) {
+            let errorMsg = `Error ${response.status}`;
+            try { const errorJson = JSON.parse(responseBody); errorMsg = errorJson.error || errorMsg; } catch (e) {}
+            throw new Error(errorMsg);
+        }
+        try { return JSON.parse(responseBody); } catch (e) { throw new Error("AI 返回了无效响应。"); }
+    }
+
+    function populateResults(generatedData) {
+        if (imagePreview.src && imagePreview.src.startsWith('data:')) { outputImage.src = imagePreview.src; } 
+        else { outputImage.src = `https://placehold.co/250x250/e0e0e0/777?text=${encodeURIComponent(generatedData.title)}`; }
+        outputImage.classList.add("image-contrast-boosted"); 
+        setActiveButton(afterBtn, beforeBtn); 
+
+        outputTitle.textContent = generatedData.title || "[无标题]";
+        outputDescription.textContent = generatedData.description || "[无描述]";
+        outputWeight.textContent = `重量/尺寸: ${generatedData.weight || "N/A"}`;
+        outputPrice.textContent = generatedData.price || "[无价格]";
+        
+        outputFeatures.innerHTML = ''; 
+        if (generatedData.features && generatedData.features.length > 0) {
+            generatedData.features.forEach(feature => {
+                const li = document.createElement('li');
+                li.textContent = feature;
+                outputFeatures.appendChild(li);
+            });
+        }
+        outputHashtags.innerHTML = '';
+        if (generatedData.hashtags && generatedData.hashtags.length > 0) {
+            generatedData.hashtags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'hashtags';
+                span.textContent = tag.startsWith('#') ? tag : `#${tag}`;
+                outputHashtags.appendChild(span);
+            });
+        }
+    }
+
+    copyTextBtn.onclick = () => {
+        const listingText = `产品标题: ${outputTitle.textContent}\n\n描述: ${outputDescription.textContent} (${outputWeight.textContent})\n\n亮点:\n${Array.from(outputFeatures.children).map(li => `• ${li.textContent}`).join('\n')}\n\n建议价格: ${outputPrice.textContent}\n\n标签: ${Array.from(outputHashtags.children).map(span => span.textContent).join(' ')}`;
+        navigator.clipboard.writeText(listingText).then(() => { alert("列表已复制！"); }).catch(err => { alert("复制失败，请手动复制。"); });
+    };
+
+    downloadResultBtn.onclick = () => {
+        const listingText = `产品标题: ${outputTitle.textContent}\n\n描述: ${outputDescription.textContent} (${outputWeight.textContent})\n\n亮点:\n${Array.from(outputFeatures.children).map(li => `• ${li.textContent}`).join('\n')}\n\n建议价格: ${outputPrice.textContent}\n\n标签: ${Array.from(outputHashtags.children).map(span => span.textContent).join(' ')}`;
+        const blob = new Blob([listingText], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'RuralMarket_listing_CN.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    };
+
+    generateAgainBtn.onclick = () => {
+        generatedListingSection.style.display = "none";
+        productNameInput.value = '';
+        productDescInput.value = '';
+        clearImagePreview();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    uploadArea.style.display = "flex";
+</script>
+</body>
+</html>

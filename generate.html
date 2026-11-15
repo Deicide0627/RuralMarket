@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Listing Generator - RuralMarket.AI</title>
+
+<!-- Google Font: Poppins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* --- Global Styles --- */
+    body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #f7f9fc;
+    }
+
+    /* --- Navbar --- */
+    .navbar {
+        width: 100%;
+        background: white;
+        padding: 15px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        box-sizing: border-box; /* Added for better scaling */
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a73e8;
+        text-decoration: none; /* Make logo a link */
+    }
+
+    /* Logo Icon Style */
+    .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background-color: #1a73e8;
+        color: white;
+        font-size: 22px;
+        font-weight: 600;
+        border-radius: 8px; /* Rounded square */
+    }
+
+
+    .nav-links a {
+        margin-left: 30px;
+        text-decoration: none;
+        color: #2d2d2d;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    .nav-links a:hover,
+    .nav-links .active {
+        color: #1a73e8;
+    }
+
+    /* --- NEW: Language Switch Style --- */
+    /* Added this to make the language link look like a button */
+    .lang-switch {
+        border: 1px solid #1a73e8;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        margin-left: 20px;
+    }
+
+    /* --- Page Titles --- */
+    .page-title {
+        margin-top: 130px;
+        text-align: center;
+        font-size: 40px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .section-subtitle {
+        font-size: 22px;
+        text-align: center;
+        margin-top: 25px;
+        font-weight: 500;
+    }
+    .underline {
+        width: 120px;
+        height: 3px;
+        background: #1a73e8;
+        margin: 8px auto 25px;
+        border-radius: 5px;
+    }
+
+    /* --- Form Containers --- */
+    .form-container {
+        width: 90%;
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 35px;
+        border-radius: 18px;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+        margin-bottom: 35px;
+        position: relative; /* Needed for loading overlay */
+        box-sizing: border-box; /* Added for better scaling */
+    }
+
+    /* --- Upload Area --- */
+    .upload-box {
+        width: 100%;
+        border: 2px dashed #bcd3f8;
+        border-radius: 14px;
+        padding: 60px 30px; /* Increased padding for new look */
+        text-align: center;
+        cursor: pointer;
+        color: #1a73e8;
+        background: #fafcff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .upload-box:hover {
+        background: #f1f6ff;
+    }
+    
+    /* Upload Icon Style */
+    .upload-plus-icon {
+        width: 50px;
+        height: 50px;
+        background-color: #6c757d; /* Grey circle */
+        color: white;
+        border-radius: 50%;
+        font-size: 30px;
+        font-weight: 300;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    
+    /* Upload Text Styles */
+    .upload-drag-text {
+        color: #1a73e8;
+        font-size: 16px;
+        font-weight: 500;
+        margin: 0;
+    }
+    .upload-browse-text {
+        color: #1a73e8;
+        font-size: 14px;
+        font-weight: 400;
+        text-decoration: underline;
+        margin-top: 4px;
+    }
+    
+    /* Image preview wrapper and delete button */
+    .image-preview-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 300px; 
+        margin: 20px auto 0;
+        display: none; 
+    }
+
+    #imagePreview {
+        width: 100%;
+        border-radius: 12px;
+        display: block;
+    }
+
+    .delete-image-btn {
+        position: absolute;
+        top: -10px; 
+        right: -10px; 
+        background: #ff4d4d;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .delete-image-btn:hover {
+        background: #cc0000;
+    }
+
+
+    /* --- Input Styles --- */
+    .input-label {
+        font-size: 18px;
+        font-weight: 600;
+        margin-top: 20px;
+        display: block;
+        color: #444;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 15px;
+        margin-top: 8px;
+        border-radius: 12px;
+        border: 1px solid #ccc;
+        background: #f9f9f9;
+        font-size: 16px;
+        box-sizing: border-box; /* Added for better scaling */
+    }
+
+    textarea {
+        height: 120px;
+        resize: vertical;
+    }
+
+    .hint {
+        font-size: 13px;
+        color: #666;
+        margin-top: 6px;
+    }
+
+    /* --- Generate Button --- */
+    .generate-btn {
+        display: block;
+        margin: 35px auto;
+        padding: 16px 50px;
+        font-size: 18px;
+        color: white;
+        background: #1a73e8; 
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    /* Disable button style */
+    .generate-btn:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+    }
+
+    /* --- Loading/Progress State Styles --- */
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        display: none; /* Hidden by default */
+        align-items: center;
+        justify-content: center;
+        border-radius: 18px;
+        flex-direction: column;
+        z-index: 5;
+    }
+
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #1a73e8;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* --- Generated Listing Section --- */
+    .generated-listing-section {
+        width: 90%;
+        max-width: 900px;
+        margin: 35px auto;
+        background: white;
+        padding: 35px;
+        border-radius: 18px;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+        display: none; 
+        box-sizing: border-box;
+    }
+
+    /* Container for Image and Text side-by-side */
+    .listing-content-wrapper {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    .listing-image-container {
+        flex-shrink: 0;
+        width: 250px; 
+        padding: 10px;
+        background: #fdfdfd;
+        border-radius: 18px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .listing-image-container img {
+        width: 100%;
+        border-radius: 12px;
+    }
+
+    /* CSS Filter for the "After" image effect */
+    .image-contrast-boosted {
+        filter: contrast(120%) brightness(105%) saturate(110%); 
+    }
+
+    /* Image Comparison Controls */
+    .image-comparison-controls {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .comparison-btn {
+        padding: 8px 15px;
+        margin: 0 5px;
+        border: none;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.3s;
+        background: #f0f0f0;
+        color: #444;
+    }
+
+    .comparison-btn.active {
+        background: #1a73e8;
+        color: white;
+        font-weight: 600;
+    }
+
+    .listing-text-output {
+        flex-grow: 1;
+    }
+
+    /* Styles for Titles and Descriptions */
+    .listing-text-output .label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #888;
+        margin-top: 15px;
+        display: block;
+    }
+
+    .listing-text-output .title-text {
+        font-size: 28px;
+        font-weight: 600;
+        color: #444;
+        margin: 5px 0 10px;
+    }
+
+    .listing-text-output .description-text {
+        font-size: 16px;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 5px;
+    }
+
+    /* Bulleted List Style */
+    .listing-text-output ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .listing-text-output ul li {
+        margin-bottom: 8px;
+        font-size: 15px;
+        color: #444;
+    }
+
+    /* Icon prefix for bullet points */
+    .listing-text-output ul li::before {
+        content: "•"; 
+        margin-right: 8px;
+        color: #1a73e8; 
+        font-weight: 800;
+    }
+    .listing-text-output ul.check-list li::before {
+        content: "✔️"; 
+        color: #28a745;
+    }
+
+
+    /* Delivery and Why Choose Us Sections */
+    .info-section p {
+        font-size: 15px;
+        color: #555;
+        line-height: 1.5;
+    }
+    .info-section h5 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Suggested Price */
+    .price-box {
+        margin-top: 30px;
+    }
+    .price-box .label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #888;
+        margin-bottom: 5px;
+        display: block;
+    }
+    .price-box .suggested-price {
+        font-size: 40px;
+        font-weight: 700;
+        color: #1a73e8;
+    }
+
+    /* Hashtags */
+    .hashtags {
+        font-size: 14px;
+        color: #1a73e8;
+        background: #f1f6ff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        display: inline-block;
+        margin-top: 8px;
+        margin-right: 5px;
+    }
+
+    /* Action Buttons (Copy/Download) */
+    .action-buttons {
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    .action-buttons button {
+        padding: 12px 30px;
+        margin: 0 10px;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .copy-btn {
+        background: #1a73e8;
+        color: white;
+    }
+
+    .copy-btn img, .download-btn img {
+        filter: invert(100%);
+    }
+
+    .copy-btn:hover {
+        background: #0d5dd7;
+    }
+
+    .download-btn {
+        background: white;
+        color: #1a73e8;
+        border: 1px solid #1a73e8;
+    }
+    .download-btn:hover {
+        background: #f1f6ff;
+    }
+    .download-btn img {
+         filter: invert(0%);
+    }
+
+    /* Generate Again Button */
+    .generate-again-btn {
+        display: block;
+        margin: 20px auto 35px;
+        padding: 10px 25px;
+        font-size: 16px;
+        background: #f0f0f0;
+        color: #444;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        width: fit-content;
+    }
+    .generate-again-btn:hover {
+        background: #e0e0e8;
+    }
+
+    /* Next Steps Section */
+    .next-steps-box {
+        background: #fffbef; 
+        border: 1px solid #fae6b9;
+        padding: 25px;
+        border-radius: 12px;
+        margin-top: 30px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .next-steps-box h4 {
+        font-size: 18px;
+        color: #333;
+        margin-top: 0;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .next-steps-box ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .next-steps-box ul li {
+        margin-bottom: 10px;
+        font-size: 15px;
+        color: #555;
+    }
+
+    .next-steps-box ul li::before {
+        content: "✔"; 
+        margin-right: 8px;
+        color: #1a73e8;
+        font-weight: bold;
+    }
+
+    /* Footer style */
+    .generated-listing-footer {
+        text-align: center;
+        font-size: 13px;
+        color: #888;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        padding-bottom: 20px;
+    }
+
+    /* Media Query for smaller screens */
+    @media (max-width: 768px) {
+        .listing-content-wrapper {
+            flex-direction: column;
+            gap: 20px;
+        }
+        .listing-image-container {
+            width: 100%; 
+            max-width: 300px;
+            margin: auto;
+        }
+        .price-box .suggested-price {
+            font-size: 32px;
+        }
+        .navbar {
+            padding: 15px 20px;
+        }
+        .nav-links {
+            overflow: hidden; 
+        }
+        .nav-links a {
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        .logo {
+            font-size: 18px;
+        }
+    }
+</style>
+
+</head>
+<body>
+
+<div class="navbar">
+    <a href="index.html" class="logo">
+        <span class="logo-icon">+</span>
+        RuralMarket.AI
+    </a>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a class="active" href="generate.html">Generate</a>
+        <a href="contact.html">Contact</a>
+        
+        <!-- ================================== -->
+        <!-- ========== ADDED HERE ============ -->
+        <!-- ================================== -->
+        <a href="generate-cn.html" class="lang-switch">中文</a>
+    </div>
+</div>
+
+<div class="page-title">AI Product Listing Generator</div>
+
+<div class="section-subtitle">Enter Your Product Details</div>
+<div class="underline"></div>
+
+<div class="form-container">
+    
+    <label class="input-label">Upload Product Photo (Optional)</label>
+
+    <div class="upload-box" id="uploadArea">
+        <div class="upload-plus-icon">+</div>
+        <p class="upload-drag-text">Drag and drop your product photo here</p>
+        <small class="upload-browse-text">or click to browse</small>
+        <input type="file" id="imageInput" accept="image/*" style="display:none;">
+    </div>
+
+    <div class="image-preview-wrapper" id="imagePreviewWrapper">
+        <img id="imagePreview" src="" alt="Product Image Preview" />
+        <button class="delete-image-btn" id="deleteImageBtn">X</button>
+    </div>
+
+</div>
+
+<div class="form-container" style="position: relative;">
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p style="color: #444; font-weight: 500;">Generating your perfect listing...</p>
+    </div>
+
+    <label class="input-label">📄 Product Name</label>
+    <input type="text" id="productName" placeholder="e.g., Fresh Organic Tomatoes">
+
+    <label class="input-label">📄 Product Description / Features</label>
+    <textarea id="productDesc" placeholder="Describe your product..."></textarea>
+    <div class="hint">Add short details about your product (e.g., handmade, organic, new).</div>
+
+    <button class="generate-btn" id="generateBtn">Generate Listing</button>
+
+</div>
+
+<div class="generated-listing-section" id="generatedListingSection">
+
+    <div class="action-buttons">
+        <button class="copy-btn" id="copyTextBtn">
+            <img src="https://www.svgrepo.com/show/511110/copy-01.svg" width="18" alt="Copy">
+            Copy Text
+        </button>
+        <button class="download-btn" id="downloadResultBtn">
+            <img src="https://www.svgrepo.com/show/512952/download-1480.svg" width="18" alt="Download">
+            Download Result
+        </button>
+    </div>
+
+    <div class="listing-content-wrapper">
+        
+        <div class="listing-image-container">
+            <img id="outputImage" src="https://via.placeholder.com/250x250?text=Listing+Image" alt="Generated Product Image">
+            
+            <div class="image-comparison-controls">
+                <button class="comparison-btn active" id="afterBtn">After</button>
+                <button class="comparison-btn" id="beforeBtn">Before</button>
+            </div>
+        </div>
+
+        <div class="listing-text-output">
+            <span class="label">PRODUCT TITLE</span>
+            <h2 class="title-text" id="outputTitle"></h2>
+
+            <span class="label">DESCRIPTION</span>
+            <p class="description-text" id="outputDescription"></p>
+            <p class="description-text" id="outputWeight"></p>
+
+            <div class="info-section">
+                <span class="label">What makes it special:</span>
+                <ul id="outputFeatures" class="check-list"></ul>
+            </div>
+
+            <div class="info-section">
+                <h5>🚚 Delivery Information:</h5>
+                <p>Fast and reliable delivery available to your area. We handle each order with care to ensure you receive your product in perfect condition.</p>
+            </div>
+
+            <div class="info-section">
+                <h5>💚 Why Choose Us:</h5>
+                <p>We're committed to connecting rural sellers with customers who appreciate genuine, quality products. Every purchase supports local farmers and artisans.</p>
+                <p>Order now and experience the difference of authentic, locally-sourced products!</p>
+            </div>
+
+            <div class="price-box">
+                <span class="label">SUGGESTED PRICE</span>
+                <p class="suggested-price" id="outputPrice"></p>
+            </div>
+            
+            <span class="label" style="margin-top: 25px;">HASHTAGS</span>
+            <div id="outputHashtags"></div>
+        </div>
+    </div>
+    
+    <button class="generate-again-btn" id="generateAgainBtn">
+        <img src="https://www.svgrepo.com/show/511239/refresh-1481.svg" width="16" alt="Refresh" style="filter: invert(50%);">
+        Generate Again
+    </button>
+    
+    <div class="next-steps-box">
+        <h4>💡 Next Steps</h4>
+        <ul>
+            <li>Copy the listing text and paste it into your marketplace</li>
+            <li>Upload your product photo to complete the listing</li>
+            <li>Share on social media using the generated hashtags</li>
+            <li>Adjust the price based on your market and costs</li>
+        </ul>
+    </div>
+
+    <div class="generated-listing-footer">
+        © 2025 RuralMarket.AI – Empowering Rural Entrepreneurs with AI
+    </div>
+</div>
+
+<script>
+/* ============================
+    CONSTANTS
+============================ */
+const uploadArea = document.getElementById("uploadArea");
+const imageInput = document.getElementById("imageInput");
+const imagePreviewWrapper = document.getElementById("imagePreviewWrapper");
+const imagePreview = document.getElementById("imagePreview");
+const deleteImageBtn = document.getElementById("deleteImageBtn");
+
+const generateBtn = document.getElementById("generateBtn");
+const productNameInput = document.getElementById("productName");
+const productDescInput = document.getElementById("productDesc");
+const loadingOverlay = document.getElementById("loadingOverlay"); 
+
+const generatedListingSection = document.getElementById("generatedListingSection");
+const outputImage = document.getElementById("outputImage");
+const outputTitle = document.getElementById("outputTitle");
+const outputDescription = document.getElementById("outputDescription");
+const outputWeight = document.getElementById("outputWeight");
+const outputFeatures = document.getElementById("outputFeatures");
+const outputPrice = document.getElementById("outputPrice");
+const outputHashtags = document.getElementById("outputHashtags");
+const copyTextBtn = document.getElementById("copyTextBtn");
+const downloadResultBtn = document.getElementById("downloadResultBtn");
+const generateAgainBtn = document.getElementById("generateAgainBtn");
+const beforeBtn = document.getElementById("beforeBtn"); 
+const afterBtn = document.getElementById("afterBtn"); 
+
+/* ============================
+    Global variable to store file
+============================ */
+let uploadedFile = null;
+
+/* ============================
+    Image Upload Preview & Delete
+============================ */
+
+uploadArea.onclick = () => imageInput.click();
+// Also trigger by clicking the text elements inside
+document.querySelector('.upload-drag-text').onclick = (e) => { e.stopPropagation(); imageInput.click(); };
+document.querySelector('.upload-browse-text').onclick = (e) => { e.stopPropagation(); imageInput.click(); };
+
+
+imageInput.onchange = () => {
+    const file = imageInput.files[0];
+    if (!file) {
+        clearImagePreview(); 
+        return;
+    }
+    
+    // Check file size (e.g., limit to 4MB)
+    if (file.size > 4 * 1024 * 1024) {
+        alert("Image is too large! Please upload a file under 4MB.");
+        clearImagePreview();
+        return;
+    }
+
+    uploadedFile = file; // Store the file object
+
+    const reader = new FileReader();
+    reader.onload = () => { 
+        imagePreview.src = reader.result;
+        imagePreviewWrapper.style.display = "block";
+        uploadArea.style.display = "none";
+    };
+    reader.readAsDataURL(file);
+};
+
+function clearImagePreview() {
+    imagePreview.src = ""; 
+    imagePreviewWrapper.style.display = "none"; 
+    uploadArea.style.display = "flex"; 
+    imageInput.value = ''; 
+    uploadedFile = null; // Clear the stored file
+}
+
+deleteImageBtn.onclick = (event) => {
+    event.stopPropagation(); 
+    clearImagePreview();
+};
+
+
+/* ============================
+    Image Comparison Logic
+============================ */
+
+function setActiveButton(activeBtn, inactiveBtn) {
+    activeBtn.classList.add("active");
+    inactiveBtn.classList.remove("active");
+}
+
+afterBtn.onclick = () => {
+    outputImage.classList.add("image-contrast-boosted");
+    setActiveButton(afterBtn, beforeBtn);
+};
+
+beforeBtn.onclick = () => {
+    outputImage.classList.remove("image-contrast-boosted");
+    setActiveButton(beforeBtn, afterBtn);
+};
+
+
+/* ============================
+    Secure Listing Generation
+============================ */
+generateBtn.onclick = async () => {
+    const productName = productNameInput.value.trim();
+    const productDescription = productDescInput.value.trim();
+
+    // 1. Get image data if it exists
+    let base64Data = null;
+    let mimeType = null;
+    if (uploadedFile && imagePreview.src) {
+        if (imagePreview.src.startsWith('data:')) {
+            base64Data = imagePreview.src.split(',')[1];
+            mimeType = uploadedFile.type;
+        }
+    }
+
+    // 2. Validation
+    if (!productName && !productDescription && !base64Data) {
+        alert("Please enter product details or upload a photo to generate a listing.");
+        return;
+    }
+
+    // 3. Show Loading Screen & Disable Button
+    loadingOverlay.style.display = "flex";
+    generateBtn.disabled = true;
+    generateBtn.textContent = "Generating...";
+    
+    try {
+        // 4. Call the Netlify "middle-man" function
+        const generatedData = await callNetlifyFunction(productName, productDescription, base64Data, mimeType);
+        
+        // 5. Populate the results
+        populateResults(generatedData);
+        
+        // 6. Hide Loading Screen and Show Results
+        loadingOverlay.style.display = "none";
+        generatedListingSection.style.display = "block";
+        window.scrollTo({ top: generatedListingSection.offsetTop - 100, behavior: 'smooth' });
+
+    } catch (error) {
+        console.error('Error calling Netlify function:', error);
+        alert('An error occurred while generating the listing. Please try again.\n\n' + error.message);
+        loadingOverlay.style.display = "none"; // Hide loading on error
+    } finally {
+        // Re-enable the button regardless of success or failure
+        generateBtn.disabled = false;
+        generateBtn.textContent = "Generate Listing";
+    }
+};
+
+/* ============================
+    Netlify "Middle-Man" Call Function
+============================ */
+async function callNetlifyFunction(productName, productDescription, base64Data, mimeType) {
+    
+    // This is the relative path to your "middle-man" function on Netlify
+    const functionUrl = '/.netlify/functions/generate';
+
+    const payload = {
+        productName,
+        productDescription,
+        base64Data,
+        mimeType
+    };
+
+    // --- Make the API Call to your own function ---
+    const response = await fetch(functionUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+
+    const responseBody = await response.text();
+
+    if (!response.ok) {
+        let errorMsg = `Error ${response.status}: Failed to generate.`;
+        try {
+            const errorJson = JSON.parse(responseBody);
+            errorMsg = errorJson.error || errorMsg;
+        } catch (e) {
+            // Do nothing if response is not JSON
+        }
+        throw new Error(errorMsg);
+    }
+
+    try {
+        // The body from the function is ALREADY a JSON string from the AI
+        return JSON.parse(responseBody);
+    } catch (e) {
+        console.error("Failed to parse JSON response from function: ", responseBody);
+        throw new Error("The AI returned an invalid response. Please try again.");
+    }
+}
+
+
+/* ============================
+    Function to populate results
+============================ */
+function populateResults(generatedData) {
+    if (imagePreview.src && imagePreview.src.startsWith('data:')) {
+        outputImage.src = imagePreview.src;
+    } else {
+        // Create a placeholder with the product title
+        outputImage.src = `https://placehold.co/250x250/e0e0e0/777?text=${encodeURIComponent(generatedData.title)}`;
+    }
+    outputImage.classList.add("image-contrast-boosted"); 
+    setActiveButton(afterBtn, beforeBtn); 
+
+    outputTitle.textContent = generatedData.title || "[No Title Generated]";
+    outputDescription.textContent = generatedData.description || "[No Description Generated]";
+    outputWeight.textContent = `Weight/Size: ${generatedData.weight || "N/A"}`;
+    outputPrice.textContent = generatedData.price || "[No Price Generated]";
+    
+    outputFeatures.innerHTML = ''; 
+    if (generatedData.features && generatedData.features.length > 0) {
+        generatedData.features.forEach(feature => {
+            const li = document.createElement('li');
+            li.textContent = feature;
+            outputFeatures.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.textContent = "No features generated.";
+        outputFeatures.appendChild(li);
+    }
+    
+    outputHashtags.innerHTML = '';
+    if (generatedData.hashtags && generatedData.hashtags.length > 0) {
+        generatedData.hashtags.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'hashtags';
+            span.textContent = tag.startsWith('#') ? tag : `#${tag}`;
+            outputHashtags.appendChild(span);
+        });
+    } else {
+        const span = document.createElement('span');
+        span.className = 'hashtags';
+        span.textContent = "#product";
+        outputHashtags.appendChild(span);
+    }
+}
+
+
+/* ============================
+    Output Action Buttons
+============================ */
+
+copyTextBtn.onclick = () => {
+    const listingText = `PRODUCT TITLE: ${outputTitle.textContent}\n\nDESCRIPTION: ${outputDescription.textContent} (${outputWeight.textContent})\n\nWHAT MAKES IT SPECIAL:\n${Array.from(outputFeatures.children).map(li => `• ${li.textContent}`).join('\n')}\n\nSUGGESTED PRICE: ${outputPrice.textContent}\n\nHASHTAGS: ${Array.from(outputHashtags.children).map(span => span.textContent).join(' ')}`;
+    
+    try {
+        navigator.clipboard.writeText(listingText).then(() => {
+            alert("Listing copied to clipboard!");
+        }).catch(err => {
+            console.warn('Clipboard API failed, falling back to execCommand:', err);
+            const textArea = document.createElement("textarea");
+            textArea.value = listingText;
+            textArea.style.position = "fixed"; 
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert("Listing copied to clipboard!");
+            } catch (execErr) {
+                console.error('execCommand failed:', execErr);
+                alert("Failed to copy. Please copy manually from the text.");
+            }
+            document.body.removeChild(textArea);
+        });
+    } catch (e) {
+        console.error('Error copying text: ', e);
+    }
+};
+
+downloadResultBtn.onclick = () => {
+    const listingText = `PRODUCT TITLE: ${outputTitle.textContent}\n\nDESCRIPTION: ${outputDescription.textContent} (${outputWeight.textContent})\n\nWHAT MAKES IT SPECIAL:\n${Array.from(outputFeatures.children).map(li => `• ${li.textContent}`).join('\n')}\n\nSUGGESTED PRICE: ${outputPrice.textContent}\n\nHASHTAGS: ${Array.from(outputHashtags.children).map(span => span.textContent).join(' ')}`;
+    
+    const blob = new Blob([listingText], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'RuralMarket_listing.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+};
+
+generateAgainBtn.onclick = () => {
+    generatedListingSection.style.display = "none";
+    productNameInput.value = '';
+    productDescInput.value = '';
+    clearImagePreview();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// Ensure upload box is visible on initial load
+uploadArea.style.display = "flex";
+</script>
+
+</body>
+</html>

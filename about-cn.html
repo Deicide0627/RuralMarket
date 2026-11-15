@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于我们 - RuralMarket.AI</title>
+
+<!-- Google Font: Poppins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* CSS copied from other pages for consistency */
+    body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #f7f9fc;
+    }
+
+    /* --- Navbar --- */
+    .navbar {
+        width: 100%;
+        background: white;
+        padding: 15px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        box-sizing: border-box; 
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a73e8;
+        text-decoration: none;
+    }
+    
+    .logo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background-color: #1a73e8;
+        color: white;
+        font-size: 22px;
+        font-weight: 600;
+        border-radius: 8px;
+    }
+
+    .nav-links a {
+        margin-left: 30px;
+        text-decoration: none;
+        color: #2d2d2d;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    .nav-links a:hover,
+    .nav-links .active {
+        color: #1a73e8;
+    }
+
+    /* Language Switch Button Style */
+    .lang-switch {
+        border: 1px solid #1a73e8;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        margin-left: 20px;
+    }
+
+    /* --- Page Titles --- */
+    .page-title {
+        margin-top: 130px;
+        text-align: center;
+        font-size: 40px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .section-subtitle {
+        font-size: 22px;
+        text-align: center;
+        margin-top: 25px;
+        font-weight: 500;
+    }
+    .underline {
+        width: 120px;
+        height: 3px;
+        background: #1a73e8;
+        margin: 8px auto 25px;
+        border-radius: 5px;
+    }
+
+    /* --- Content Card --- */
+    .content-container {
+        width: 90%;
+        max-width: 900px;
+        margin: 30px auto;
+        background: white;
+        padding: 35px 45px;
+        border-radius: 18px;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+        margin-bottom: 35px;
+        text-align: left;
+        line-height: 1.7;
+    }
+    .content-container h3 {
+        color: #1a73e8;
+        font-size: 24px;
+        margin-bottom: 15px;
+        margin-top: 30px;
+    }
+    .content-container h3:first-child {
+        margin-top: 0;
+    }
+    .content-container p {
+        color: #555;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    
+    .content-container ul {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 20px;
+    }
+    .content-container ul li {
+        position: relative;
+        padding-left: 30px;
+        margin-bottom: 10px;
+        color: #555;
+    }
+    .content-container ul li::before {
+        content: "✔️";
+        color: #28a745;
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+    }
+
+    .team-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+    }
+    .team-member {
+        background: #f7f9fc;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+        text-align: center;
+    }
+    .team-member h4 {
+        margin: 0 0 5px 0;
+        font-size: 18px;
+        color: #333;
+    }
+    .team-member p {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .navbar { padding: 15px 20px; }
+        .nav-links { overflow: hidden; } 
+        .nav-links a { margin-left: 10px; font-size: 14px; }
+        .logo { font-size: 18px; }
+    }
+
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="index-cn.html" class="logo">
+        <span class="logo-icon">+</span>
+        RuralMarket.AI
+    </a>
+
+    <div class="nav-links">
+        <a href="index-cn.html">首页</a>
+        <!-- Current Page -->
+        <a class="active" href="about-cn.html">关于我们</a>
+        <a href="generate-cn.html">生成列表</a>
+        <a href="contact-cn.html">联系我们</a>
+        <!-- Switch to English -->
+        <a href="about.html" class="lang-switch">English</a>
+    </div>
+</div>
+
+<div class="page-title">关于我们</div>
+
+<div class="section-subtitle">我们的使命与团队</div>
+<div class="underline"></div>
+
+<div class="content-container">
+    <h3>我们的使命</h3>
+    <p>
+        我们的项目旨在为砂拉越农村的小型农户、家庭生产者和微型企业家创建一个强大且用户友好的 AI 工具。
+    </p>
+    <p>
+        我们了解撰写完美的产品列表可能是一个障碍。这就是为什么 <strong>RuralMarket.AI</strong> 能够根据简单的产品照片和少量细节，自动生成引人注目的产品描述，建议有竞争力的价格，并提供发布指南。我们希望赋予当地卖家权力，让他们更有效地将产品销售给更广阔的市场。
+    </p>
+
+    <h3>我们的解决方案</h3>
+    <p>通过 RuralMarket.AI，卖家可以轻松获得：</p>
+    <ul>
+        <li>引人入胜且有说服力的产品描述。</li>
+        <li>基于数据的智能价格建议。</li>
+        <li>带有相关标签 (Hashtags) 的发布指南。</li>
+    </ul>
+
+    <h3>遇见团队</h3>
+    <p>我们是来自砂拉越科技大学 (UTS) 的学生团队，目前攻读计算机科学学士学位。这个项目源于我们的热情，我们希望结合我们的技术技能，为当地社区带来真正的改变。</p>
+
+    <div class="team-container">
+        <div class="team-member">
+            <h4>Asmond Yong</h4>
+            <p>项目开发人员</p>
+        </div>
+        <div class="team-member">
+            <h4>Wong Siew Jie</h4>
+            <p>项目开发人员</p>
+        </div>
+        <div class="team-member">
+            <h4>Aloysius Chan</h4>
+            <p>项目开发人员</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
